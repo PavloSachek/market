@@ -1,0 +1,27 @@
+<!-- template/index_template.html -->
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Щоденний ринковий аналіз</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 700px; margin: auto; background: #fdfdfd; }
+    h1 { color: #222; }
+    .highlight { font-weight: bold; color: #c00; }
+  </style>
+</head>
+<body>
+  <h1>Ринковий огляд — {{date}}</h1>
+  <p><strong>VIX:</strong> {{vix}}</p>
+  <p><strong>Зміна S&P 500:</strong> {{sp500_change}}%</p>
+  <p><strong>Ціна BTC:</strong> ${{btc_usd}}</p>
+
+  <h2>Короткий аналіз</h2>
+  <p>{{market_summary}}</p>
+
+  <footer style="margin-top: 40px; font-size: 0.8em; color: #666;">
+    Звіт згенеровано автоматично скриптом update.py
+  </footer>
+</body>
+</html>
