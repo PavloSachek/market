@@ -26,6 +26,9 @@ jobs:
     - name: Генерація аналітики
       run: python generate.py
 
+    - name: Перевірка файлів після генерації
+    - run: ls -1
+
     - name: Оновлення HTML
       run: python update.py
 
