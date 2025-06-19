@@ -24,7 +24,7 @@ jobs:
       - name: Згенерувати index.html
         run: python generate.py
 
-      - name: Закомітити оновлену HTML-сторінку
+      - name: Закомітити оновлення
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'actions@github.com'
