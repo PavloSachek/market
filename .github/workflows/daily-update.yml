@@ -22,7 +22,7 @@ jobs:
       run: pip install -r requirements.txt || true
 
     - name: Run generate script
-      run: python scripts/generate.py
+      run: python update.py
 
     - name: Commit and push changes
       run: |
