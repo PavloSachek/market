@@ -1,8 +1,10 @@
-name: Оновлення статичної сторінки
+# .github/workflows/daily-update.yml
+
+name: Daily Market Update
 
 on:
   schedule:
-    - cron: '0 13 * * 1-5'  # Щодня о 13:00 UTC (8:00 NYT)
+    - cron: "0 13 * * 1-5"  # Щодня о 13:00 UTC (8:00 NY)
   workflow_dispatch:
 
 jobs:
@@ -10,24 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Клонувати репозиторій
-        uses: actions/checkout@v4
+    - name: Клон репозиторій
+      uses: actions/checkout@v4
 
-      - name: Встановити Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: Встановлення Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-      - name: Встановити залежності
-        run: pip install -r requirements.txt
+    - name: Встановлення залежностей (якщо треба)
+      run: pip install -r requirements.txt || true
 
-      - name: Згенерувати index.html
-        run: python generate.py
+    - name: Генерація аналітики
+      run: python generate.py
 
-      - name: Закомітити оновлення
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'actions@github.com'
-          git add index.html
-          git diff --cached --quiet || git commit -m "Автоматичне оновлення index.html"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+    - name: Оновлення HTML
+      run: python update.py
+
+    - name: Коміт та пуш index.html
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+        git add index.html data/report.json
+        git commit -m "🔄 Автоматичне оновлення index.html"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
