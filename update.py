@@ -1,11 +1,12 @@
 # update.py
-import os
-import subprocess
+# Цей скрипт імітує оновлення даних (можна доповнювати логікою)
 
-# Додаємо файли до коміту
-subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"])
-subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions"])
+def update_data():
+    # Приклад оновлення даних або логіки
+    print("Оновлення даних виконано.")
 
-subprocess.run(["git", "add", "index.html"])
-subprocess.run(["git", "commit", "-m", "🔄 Автоматичне оновлення index.html"])
-subprocess.run(["git", "push", "origin", "main"])
+def main():
+    update_data()
+
+if name == "main":
+    main()
