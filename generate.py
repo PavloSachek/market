@@ -1,27 +1,33 @@
-# generate.py
-# Скрипт формує index.html для GitHub Pages на основі актуальних даних
+name: Оновлення статичної сторінки
 
-def generate_html():
-    # Тут формуємо просту сторінку з контентом
-    html_content = """<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8" />
-    <title>Аналіз Ринку</title>
-</head>
-<body>
-    <h1>Щоденний Аналіз Ринку</h1>
-    <p>Це автоматично згенерована сторінка.</p>
-</body>
-</html>"""
-    return html_content
+on:
+  schedule:
+    - cron: '0 13 * * 1-5'  # Щодня о 13:00 UTC (8:00 NYT)
+  workflow_dispatch:
 
-def main():
-    html = generate_html()
-    # Записуємо у файл index.html в корені репозиторію
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    print("index.html успішно згенеровано.")
+jobs:
+  update:
+    runs-on: ubuntu-latest
 
-if name == "main":
-    main()
+    steps:
+      - name: Клонувати репозиторій
+        uses: actions/checkout@v4
+
+      - name: Встановити Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Встановити залежності
+        run: pip install -r requirements.txt
+
+      - name: Згенерувати index.html
+        run: python generate.py
+
+      - name: Закомітити оновлену HTML-сторінку
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m "Автоматичне оновлення index.html"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
