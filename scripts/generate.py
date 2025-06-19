@@ -1,47 +1,41 @@
+# generate.py
 from datetime import datetime
 
-# Формування заголовку
-now = datetime.utcnow()
-date_str = now.strftime("%d.%m.%Y")
-start_time = now.strftime("%H:%M UTC")
-end_time = (now.replace(second=0, microsecond=0)).strftime("%H:%M UTC")
-
-html = f"""<!DOCTYPE html>
-<html lang="uk">
+html_template = f"""
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Щоденний ринковий аналіз</title>
-  <style>
-    body {{
-      background-color: #f9f9f9;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      margin: 2rem;
-      color: #333;
-    }}
-    .block {{
-      background-color: #f0f0f0;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-    }}
-    .italic {{
-      font-style: italic;
-      color: #666;
-    }}
-  </style>
+    <meta charset="UTF-8">
+    <title>Щоденний ринковий аналіз</title>
+    <style>
+        body {{
+            background-color: #f9f9f9;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 40px;
+        }}
+        .block {{
+            background-color: #ececec;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }}
+        em {{
+            color: #666;
+        }}
+    </style>
 </head>
 <body>
-  <div class="block">
-    <h1>🔎 Щоденний аналіз ринку</h1>
-    <p><strong>Дата аналізу:</strong> {date_str}</p>
-    <p><strong>Час початку збору даних:</strong> {start_time}</p>
-    <p><strong>Час завершення аналізу:</strong> {end_time}</p>
-    <p class="italic">Цей аналіз сформовано автоматично.</p>
-  </div>
+    <div class="block">
+        <h1>📅 Щоденний ринковий аналіз</h1>
+        <p><strong>Дата:</strong> {datetime.utcnow().strftime('%Y-%m-%d')}</p>
+        <p><strong>Початок збору:</strong> {datetime.utcnow().strftime('%H:%M UTC')}</p>
+        <p><strong>Завершення аналізу:</strong> {datetime.utcnow().strftime('%H:%M UTC')}</p>
+        <p><em>Автоматично згенеровано за допомогою GitHub Actions</em></p>
+    </div>
 </body>
 </html>
 """
 
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html)
+with open("index.html", "w") as f:
+    f.write(html_template)
