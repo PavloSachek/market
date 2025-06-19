@@ -1,5 +1,3 @@
-# generate.py
-
 import json
 from datetime import datetime
 
@@ -20,4 +18,4 @@ def save_report(data):
 if name == "main":
     report = collect_market_data()
     save_report(report)
-    print("✅ Данні зібрано і збережено в data/report.json")
+    print("✅ Дані зібрано і збережено в data/report.json")
