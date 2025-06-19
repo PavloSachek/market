@@ -3,7 +3,7 @@ from datetime import datetime
 
 html_template = f"""
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <title>Щоденний ринковий аналіз</title>
