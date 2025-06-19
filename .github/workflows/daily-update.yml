@@ -2,32 +2,36 @@ name: Daily Market Analysis
 
 on:
   schedule:
-    - cron: '0 13 * * 1-5'  # Щодня о 13:00 UTC (8:00 NYT)
-  workflow_dispatch:        # Можна запускати вручну
+    - cron: "0 13 * * 1-5"  # 13:00 UTC у будні дні
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: ⬇️ Клон репозиторію
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.11
+      - name: ⚙️ Встановлення Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt || true
+      - name: 📦 Встановлення залежностей (якщо є)
+        run: pip install -r requirements.txt || true
 
-    - name: Run generate script
-      run: python update.py
+      - name: 🛠️ Генерація HTML
+        run: python generate.py
 
-    - name: Commit and push changes
-      run: |
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add index.html
-        git commit -m "🤖 Автоматичне оновлення: ${{ github.run_id }}" || echo "No changes"
-        git push
+      - name: 🔑 Налаштування git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: 🔁 Коміт і пуш
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+          python update.py
