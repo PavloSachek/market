@@ -1,41 +1,27 @@
 # generate.py
-from datetime import datetime
+# Скрипт формує index.html для GitHub Pages на основі актуальних даних
 
-html_template = f"""
-<!DOCTYPE html>
+def generate_html():
+    # Тут формуємо просту сторінку з контентом
+    html_content = """<!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Щоденний ринковий аналіз</title>
-    <style>
-        body {{
-            background-color: #f9f9f9;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 40px;
-        }}
-        .block {{
-            background-color: #ececec;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }}
-        em {{
-            color: #666;
-        }}
-    </style>
+    <meta charset="UTF-8" />
+    <title>Аналіз Ринку</title>
 </head>
 <body>
-    <div class="block">
-        <h1>📅 Щоденний ринковий аналіз</h1>
-        <p><strong>Дата:</strong> {datetime.utcnow().strftime('%Y-%m-%d')}</p>
-        <p><strong>Початок збору:</strong> {datetime.utcnow().strftime('%H:%M UTC')}</p>
-        <p><strong>Завершення аналізу:</strong> {datetime.utcnow().strftime('%H:%M UTC')}</p>
-        <p><em>Автоматично згенеровано за допомогою GitHub Actions</em></p>
-    </div>
+    <h1>Щоденний Аналіз Ринку</h1>
+    <p>Це автоматично згенерована сторінка.</p>
 </body>
-</html>
-"""
+</html>"""
+    return html_content
 
-with open("index.html", "w") as f:
-    f.write(html_template)
+def main():
+    html = generate_html()
+    # Записуємо у файл index.html в корені репозиторію
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("index.html успішно згенеровано.")
+
+if name == "main":
+    main()
