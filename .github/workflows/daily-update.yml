@@ -1,10 +1,8 @@
-# .github/workflows/daily-update.yml
-
-name: Daily Market Update
+name: Daily Update
 
 on:
   schedule:
-    - cron: "0 13 * * 1-5"  # Щодня о 13:00 UTC (8:00 NY)
+    - cron: '0 12 * * *'  # щодня о 12:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -12,32 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Клон репозиторій
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Встановлення Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Встановлення залежностей (якщо треба)
-      run: pip install -r requirements.txt || true
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Генерація аналітики
-      run: python generate.py
+      - name: Run generate.py
+        run: python generate.py
 
-    - name: Перевірка файлів після генерації
-    - run: ls -1
+      - name: Check generated files
+        run: ls -l
 
-    - name: Оновлення HTML
-      run: python update.py
-
-    - name: Коміт та пуш index.html
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "actions@github.com"
-        git add index.html data/report.json
-        git commit -m "🔄 Автоматичне оновлення index.html"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add index.html report.json || echo "No files to commit"
+          git commit -m "Автоматичне оновлення сторінки" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
