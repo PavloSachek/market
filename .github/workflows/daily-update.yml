@@ -1,36 +1,33 @@
-name: Daily Market Analysis
+name: Оновлення щоденної сторінки
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # запуск о 06:00 UTC щодня
-  workflow_dispatch:  # дозволяє запускати вручну
+    - cron: '0 13 * * 1-5'  # Запуск о 13:00 UTC (8:00 NYT)
+  workflow_dispatch:
 
 jobs:
-  update-and-generate:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Клонування репозиторію
-      uses: actions/checkout@v3
+      - name: Клон репозиторію
+        uses: actions/checkout@v4
 
-    - name: Налаштування Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Встановити Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Запуск update.py
-      run: python3 update.py
+      - name: Встановити залежності
+        run: pip install -r requirements.txt
 
-    - name: Запуск generate.py
-      run: python3 generate.py
+      - name: Запустити генерацію сторінки
+        run: python generate.py
 
-  - name: Пуш оновлень
-  env:
-    GH_TOKEN: ${{ secrets.GH_TOKEN }}
-  run: |
-    git config --global user.name 'github-actions'
-    git config --global user.email 'actions@github.com'
-    git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-    git add index.html
-    git commit -m "Автоматичне оновлення сторінки"
-    git push
+      - name: Пуш оновлень
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add index.html
+          git commit -m "Автоматичне оновлення сторінки"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
