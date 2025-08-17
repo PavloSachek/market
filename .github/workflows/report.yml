@@ -1,0 +1,66 @@
+Pavel, [17.08.2025 14:15]
+import yfinance as yf
+import pandas as pd
+from datetime import datetime
+
+# приклад: беремо S&P500 (SPY), Nasdaq (QQQ), Bitcoin (BTC-USD)
+tickers = ["SPY", "QQQ", "BTC-USD"]
+
+data = {}
+for t in tickers:
+    ticker = yf.Ticker(t)
+    hist = ticker.history(period="2d")  # останні 2 дні
+    if len(hist) >= 2:
+        change = (hist["Close"][-1] - hist["Close"][-2]) / hist["Close"][-2] * 100
+        data[t] = f"{change:.2f}%"
+    else:
+        data[t] = "немає даних"
+
+# формуємо звіт
+today = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+with open("report.txt", "w", encoding="utf-8") as f:
+    f.write(f"Звіт за {today}\n\n")
+    for t, ch in data.items():
+        f.write(f"{t}: {ch}\n")
+
+print("✅ report.txt створено")
+
+Pavel, [17.08.2025 14:16]
+name: Daily Market Report
+
+on:
+  schedule:
+    - cron: "0 13 * * 1-5"   # будні о 13:00 UTC
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        run: python update.py
+
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Щоденний ринковий звіт"
+          to: твоя_пошта@gmail.com
+          from: "GitHub Bot"
+          body: file://report.txt
